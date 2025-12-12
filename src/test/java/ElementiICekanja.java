@@ -112,4 +112,38 @@ public class ElementiICekanja {
         Thread.sleep(500);
         driver.switchTo().alert().accept();
     }
+
+    @Test
+    public void iFrameSellection() throws InterruptedException {
+        //iFrame - sajt u okviru sajta
+        driver.get("https://rahulshettyacademy.com/AutomationPractice/");
+        Thread.sleep(1000);
+        int size = driver.findElements(By.tagName("iFrame")).size();
+
+        driver.switchTo().frame(0); //preko indeksa tj. preko rednog broja u listi
+//        driver.switchTo().frame("iframe-name"); //preko imena iFrame-a
+//        driver.switchTo().frame("courses-iframe"); //preko ID-a iFrame-a
+
+        driver.switchTo().defaultContent(); //vraćanje na glavni prozor (onaj u kome se nalazi iFrame)
+
+        //Kako naći index iFrame-a koji nema ni ime ni id?
+        int size1 = driver.findElements(By.tagName("iFrame")).size();
+
+        int iFrameIndex = 0;
+        for(int i = 0; i<size1;i++){
+            driver.switchTo().frame(i);
+            if(driver.findElements(By.xpath("//a[contains(text(),'Sign Up')]")).size()==1){
+                System.out.println("Evo ga!: " + i);
+                iFrameIndex = i;
+                driver.switchTo().defaultContent();
+                break;
+            }
+            driver.switchTo().defaultContent();
+        }
+
+        Thread.sleep(1000);
+        driver.switchTo().frame(iFrameIndex);
+        driver.findElement(By.xpath("//a[contains(text(),'Sign Up')]")).click();
+        Thread.sleep(1000);
+    }
 }
